@@ -132,7 +132,7 @@ docs(readme): update configuration table
 
 ### Review Process
 
-1. **Automated checks** run (lint, test, build)
+1. **Automated deploy check** runs (Cloudflare Pages preview deployment)
 2. **Code review** by maintainer
 3. **Changes requested** or **approved**
 4. **Merged** to main branch
