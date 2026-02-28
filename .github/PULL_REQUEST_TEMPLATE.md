@@ -1,0 +1,23 @@
+## Summary
+<!-- What does this PR do? -->
+
+## Type
+- [ ] 🚀 Feature
+- [ ] 🐛 Bug Fix
+- [ ] 🔧 Chore / Refactor
+- [ ] 📚 Documentation
+- [ ] 🔒 Security
+
+## Changes
+<!-- List key changes -->
+-
+
+## Testing
+- [ ] Manual browser testing completed against a local Ollama instance
+- [ ] Manual testing done
+- [ ] No regressions
+
+## Checklist
+- [ ] Documentation / release notes updated (if applicable)
+- [ ] No secrets committed
+- [ ] CI passes

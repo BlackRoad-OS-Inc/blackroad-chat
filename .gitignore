@@ -1,0 +1,52 @@
+# BlackRoad OS - Security-First Gitignore
+
+# Secrets & credentials (NEVER commit)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+**/credentials.json
+**/service-account*.json
+**/.master.key
+
+# API tokens & auth
+.cloudflare-token
+
+# Process files
+*.pid
+*.sock
+*.lock
+
+# Runtime & build
+logs/
+node_modules/
+dist/
+build/
+.cache/
+.vercel/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.idea/
+.vscode/settings.json
+.vscode/launch.json
+
+# Test artifacts
+coverage/
+.nyc_output/
+
+# Local-only settings
+.claude/settings.local.json
+
+# Temp / scratch files
+*.save

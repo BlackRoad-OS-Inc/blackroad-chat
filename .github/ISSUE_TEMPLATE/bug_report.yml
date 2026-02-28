@@ -1,0 +1,90 @@
+name: Bug Report
+description: Report something broken in BlackRoad Chat
+title: "[Bug]: "
+labels: ["type:bug", "status:backlog"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please fill out the sections below so we can reproduce and fix the issue.
+
+  - type: dropdown
+    id: team
+    attributes:
+      label: Team
+      description: Which area does this affect?
+      options:
+        - Web / Frontend
+        - Infrastructure / DevOps
+        - Documentation
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How critical is this?
+      options:
+        - P2 - Normal
+        - P1 - High
+        - P0 - Critical (drop everything)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Clear description of the bug.
+      placeholder: "When I send a message, the streaming response fails with..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should have happened instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps to trigger the bug.
+      placeholder: |
+        1. Open the chat page
+        2. Select a model
+        3. Send a message
+        4. See error
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      description: Where did this happen?
+      multiple: true
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Mobile
+        - Other
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / error output
+      description: Paste any relevant console logs or error messages.
+      render: shell
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Screenshots, Ollama version, related issues, etc.
