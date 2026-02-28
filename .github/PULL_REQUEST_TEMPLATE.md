@@ -13,7 +13,7 @@
 -
 
 ## Testing
-- [ ] Unit tests pass
+- [ ] Manual browser testing completed against a local Ollama instance
 - [ ] Manual testing done
 - [ ] No regressions
 
