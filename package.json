@@ -1,0 +1,20 @@
+{
+  "name": "@blackroad/chat",
+  "version": "1.0.0",
+  "description": "BlackRoad AI Chat — Ollama-powered chat interface",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:brand": "node test/brand-compliance.mjs",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.1"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "PROPRIETARY"
+}

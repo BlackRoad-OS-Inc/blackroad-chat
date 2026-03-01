@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  brand-compliance:
+    name: Brand Color Compliance
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check for forbidden colors
+        # Colors from BlackRoad-OS-Inc/blackroad-design FORBIDDEN_COLORS list
+        run: |
+          FORBIDDEN="#FF9D00|#FF6B00|#FF0066|#FF006B|#D600AA|#7700FF|#0066FF"
+          if grep -in -E "$FORBIDDEN" index.html; then
+            echo "❌ Forbidden colors found (old brand system)"
+            exit 1
+          fi
+          echo "✓ No forbidden colors found"
+
+      - name: Run brand compliance tests
+        run: node test/brand-compliance.mjs
+
+      - name: ✅ Brand compliance passed
+        run: echo "Brand compliance checks passed"
+
+  e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Run E2E tests
+        run: npm test
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
