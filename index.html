@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BlackRoad AI Chat — Ollama-powered chat interface for BlackRoad infrastructure">
+  <meta name="theme-color" content="#0a0a0a">
   <title>BlackRoad AI Chat — Powered by Ollama</title>
   <style>
     :root {
@@ -282,6 +284,8 @@
     #send-btn:hover { opacity: .9; }
     #send-btn:active { transform: scale(.95); }
     #send-btn:disabled { opacity: .4; cursor: default; }
+    #send-btn.stop { background: var(--card); border: 1px solid var(--pink); color: var(--pink); font-size: 14px; }
+    #send-btn.stop:hover { opacity: 1; background: var(--pink); color: #fff; }
 
     .input-meta {
       display: flex;
@@ -400,12 +404,12 @@
 <header>
   <span class="logo">⬡ BlackRoad AI</span>
   <div class="header-controls">
-    <input type="text" id="endpoint-input" value="http://192.168.4.38:9083" placeholder="Ollama endpoint…" title="Ollama API endpoint">
-    <select id="model-select">
+    <input type="text" id="endpoint-input" value="http://192.168.4.38:9083" placeholder="Ollama endpoint…" title="Ollama API endpoint" autocomplete="off" aria-label="Ollama endpoint URL">
+    <select id="model-select" aria-label="Select model">
       <option value="">Loading models…</option>
     </select>
-    <button class="btn-icon" onclick="clearChat()">↺ Clear</button>
-    <button class="btn-icon" onclick="openSettings()">⚙</button>
+    <button class="btn-icon" onclick="clearChat()" aria-label="Clear chat">↺ Clear</button>
+    <button class="btn-icon" onclick="openSettings()" aria-label="Open settings">⚙</button>
   </div>
 </header>
 
@@ -433,8 +437,8 @@
 <!-- Input -->
 <div id="input-area">
   <div class="input-row">
-    <textarea id="chat-input" placeholder="Message BlackRoad AI…" rows="1"></textarea>
-    <button id="send-btn" onclick="sendMessage()" title="Send (Enter)">↑</button>
+    <textarea id="chat-input" placeholder="Message BlackRoad AI…" rows="1" aria-label="Chat message"></textarea>
+    <button id="send-btn" onclick="sendMessage()" title="Send (Enter)" aria-label="Send message">↑</button>
   </div>
   <div class="input-meta">
     <span>Enter to send · Shift+Enter for new line</span>
@@ -480,6 +484,7 @@ const state = {
   history:  [],
   streaming: false,
 };
+let abortCtrl = null;
 
 // ── Init ───────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -505,6 +510,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   loadModels();
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && state.streaming) abortStream();
+  });
 });
 
 // ── Model loading ──────────────────────────────────────────────────────────
@@ -516,9 +525,14 @@ async function loadModels() {
     const data = await res.json();
     const models = data.models || [];
     if (!models.length) throw new Error('No models found');
-    sel.innerHTML = models.map(m =>
-      `<option value="${m.name}" ${m.name === state.model ? 'selected' : ''}>${m.name}</option>`
-    ).join('');
+    sel.textContent = '';
+    for (const m of models) {
+      const opt = document.createElement('option');
+      opt.value = m.name;
+      opt.textContent = m.name;
+      if (m.name === state.model) opt.selected = true;
+      sel.appendChild(opt);
+    }
     if (!state.model) state.model = models[0].name;
     sel.value = state.model;
     sel.onchange = () => {
@@ -552,7 +566,7 @@ async function sendMessage() {
   const text  = input.value.trim();
   if (!text || state.streaming) return;
   const model = document.getElementById('model-select').value;
-  if (!model) { alert('Please select a model first'); return; }
+  if (!model) { hideEmpty(); appendSystemMsg('⚠ No model selected — check the Ollama endpoint.'); return; }
 
   input.value = '';
   input.style.height = '';
@@ -562,7 +576,13 @@ async function sendMessage() {
   state.history.push({ role: 'user', content: text });
 
   const typingEl = appendTyping();
-  document.getElementById('send-btn').disabled = true;
+  abortCtrl = new AbortController();
+  const sendBtn = document.getElementById('send-btn');
+  sendBtn.classList.add('stop');
+  sendBtn.textContent = '◼';
+  sendBtn.setAttribute('aria-label', 'Stop generating');
+  sendBtn.title = 'Stop generating (Escape)';
+  sendBtn.onclick = abortStream;
   state.streaming = true;
 
   try {
@@ -580,6 +600,7 @@ async function sendMessage() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
+      signal: abortCtrl.signal,
     });
 
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -618,16 +639,32 @@ async function sendMessage() {
     scrollToBottom();
   } catch(e) {
     typingEl?.remove();
-    appendSystemMsg(`Error: ${e.message}. Check that the Ollama endpoint is reachable.`);
+    if (e.name !== 'AbortError') {
+      appendSystemMsg(`Error: ${e.message}. Check that the Ollama endpoint is reachable.`);
+    }
   } finally {
-    document.getElementById('send-btn').disabled = false;
+    restoreSendButton();
     state.streaming = false;
+    abortCtrl = null;
   }
 }
 
 function sendSuggestion(el) {
   document.getElementById('chat-input').value = el.textContent;
   sendMessage();
+}
+
+function abortStream() {
+  if (abortCtrl) { abortCtrl.abort(); abortCtrl = null; }
+}
+
+function restoreSendButton() {
+  const sendBtn = document.getElementById('send-btn');
+  sendBtn.classList.remove('stop');
+  sendBtn.textContent = '↑';
+  sendBtn.setAttribute('aria-label', 'Send message');
+  sendBtn.title = 'Send (Enter)';
+  sendBtn.onclick = sendMessage;
 }
 
 // ── DOM helpers ────────────────────────────────────────────────────────────
