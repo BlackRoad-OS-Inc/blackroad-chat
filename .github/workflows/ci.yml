@@ -1,7 +1,7 @@
 name: CI
 
 # ✅ VERIFIED WORKING — All jobs pass on main (run 22548623126, 2026-03-01).
-# Actions pinned to SHA-256 commit hashes for supply-chain security.
+# Actions pinned to commit hashes for supply-chain security.
 
 on:
   push:
