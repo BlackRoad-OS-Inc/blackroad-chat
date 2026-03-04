@@ -1,6 +1,6 @@
 name: Deploy Cloudflare Worker
 
-# ✅ VERIFIED WORKING — Deploys worker.js to Cloudflare Workers via Wrangler.
+# Syntax-validated; requires secrets to be configured before first successful run. Deploys worker.js to Cloudflare Workers via Wrangler.
 # The Worker proxies Ollama API requests with proper CORS headers and timeout
 # handling, enabling longer-running chat completions from any origin.
 #
