@@ -72,10 +72,17 @@ export default {
 
     const targetUrl = `${parsedHost.origin}${url.pathname}${url.search}`;
 
-    // Forward request to Ollama
+    // Forward request to Ollama with a minimal set of headers to avoid leaking
+    // browser-managed credentials (e.g., cookies, authorization headers).
+    const forwardedHeaders = new Headers();
+    const contentType = request.headers.get('content-type');
+    if (contentType) {
+      forwardedHeaders.set('Content-Type', contentType);
+    }
+
     const proxyRequest = new Request(targetUrl, {
       method: request.method,
-      headers: request.headers,
+      headers: forwardedHeaders,
       body: request.method === 'GET' || request.method === 'HEAD' ? undefined : request.body,
     });
 
