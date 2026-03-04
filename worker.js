@@ -90,8 +90,9 @@ export default {
     try {
       response = await fetch(proxyRequest);
     } catch (err) {
+      console.error('Error fetching from Ollama backend:', err);
       return new Response(
-        JSON.stringify({ error: 'Ollama unreachable', detail: String(err) }),
+        JSON.stringify({ error: 'Ollama unreachable' }),
         {
           status: 502,
           headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
