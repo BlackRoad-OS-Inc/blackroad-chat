@@ -14,6 +14,10 @@ compatibility_date = "2026-01-01"
 [observability]
 enabled = true
 
-[[routes]]
-pattern = "chat-worker.blackroad.ai/*"
-zone_name = "blackroad.ai"
+# Routes configuration has been intentionally omitted from this file
+# to avoid exposing production domain and routing details when this
+# repository (including wrangler.toml) is served publicly (e.g. via
+# Cloudflare Pages with directory: .).
+#
+# Configure routes and zones for this worker via the Cloudflare
+# Dashboard instead of defining [[routes]] and zone_name here.
