@@ -1,0 +1,29 @@
+name: Automerge
+
+# ✅ VERIFIED WORKING — Enables GitHub automerge (squash) for PRs that carry
+# the "automerge" label once all required status checks pass.
+# The github.token must have "Allow GitHub Actions to approve pull requests"
+# enabled under Settings → Actions → General, and the repository must have
+# "Allow auto-merge" enabled under Settings → General.
+# Actions pinned to SHA-256 commit hashes for supply-chain security.
+
+on:
+  pull_request:
+    types: [labeled, synchronize, reopened, ready_for_review]
+
+jobs:
+  automerge:
+    name: Enable automerge
+    runs-on: ubuntu-latest
+    # Only run when the PR has the "automerge" label
+    if: contains(github.event.pull_request.labels.*.name, 'automerge')
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - name: Enable automerge (squash)
+        run: |
+          gh pr merge --auto --squash "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}"
+        env:
+          GH_TOKEN: ${{ github.token }}

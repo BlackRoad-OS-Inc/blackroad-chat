@@ -1,0 +1,20 @@
+# Cloudflare Workers configuration for BlackRoad AI Chat
+# Deploy with: wrangler deploy
+# Required secret: wrangler secret put OLLAMA_HOST
+
+name = "blackroad-chat-worker"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Workers environment bindings
+# Set OLLAMA_HOST as a secret (never committed):
+#   wrangler secret put OLLAMA_HOST
+# Example value: https://your-ollama-host.example.com
+
+[observability]
+enabled = true
+
+[[routes]]
+pattern = "chat-worker.blackroad.ai/*"
+zone_name = "blackroad.ai"

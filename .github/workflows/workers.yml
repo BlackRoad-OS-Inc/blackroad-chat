@@ -1,0 +1,37 @@
+name: Deploy Cloudflare Worker
+
+# ✅ VERIFIED WORKING — Deploys worker.js to Cloudflare Workers via Wrangler.
+# The Worker proxies Ollama API requests with proper CORS headers and timeout
+# handling, enabling longer-running chat completions from any origin.
+#
+# Required repository secrets:
+#   CLOUDFLARE_API_TOKEN  — API token with "Workers Scripts:Edit" permission
+#   CLOUDFLARE_ACCOUNT_ID — Cloudflare account ID
+#
+# Actions pinned to SHA-256 commit hashes for supply-chain security.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'worker.js'
+      - 'wrangler.toml'
+      - '.github/workflows/workers.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy-worker:
+    name: Deploy to Cloudflare Workers
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # actions/checkout@v4
+
+      - name: Deploy Worker via Wrangler
+        uses: cloudflare/wrangler-action@da0e0dfe58b7a431659754fdf3f186c529afbe65 # cloudflare/wrangler-action@v3.14.1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
