@@ -1,6 +1,6 @@
 name: Deploy to Cloudflare Pages
 
-# ✅ VERIFIED WORKING — Deploys index.html to Cloudflare Pages.
+# Deploys index.html to Cloudflare Pages when required secrets are configured.
 # Requires CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repository secrets.
 # Actions pinned to SHA-256 commit hashes for supply-chain security.
 
