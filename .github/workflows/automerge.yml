@@ -5,7 +5,7 @@ name: Automerge
 # The github.token must have "Allow GitHub Actions to approve pull requests"
 # enabled under Settings → Actions → General, and the repository must have
 # "Allow auto-merge" enabled under Settings → General.
-# Actions pinned to SHA-256 commit hashes for supply-chain security.
+# This workflow uses the pre-installed GitHub CLI (gh) and does not call third-party actions.
 
 on:
   pull_request:
