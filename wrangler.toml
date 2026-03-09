@@ -1,0 +1,23 @@
+# Cloudflare Workers configuration for BlackRoad AI Chat
+# Deploy with: wrangler deploy
+# Required secret: wrangler secret put OLLAMA_HOST
+
+name = "blackroad-chat-worker"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+# Workers environment bindings
+# Set OLLAMA_HOST as a secret (never committed):
+#   wrangler secret put OLLAMA_HOST
+# Example value: https://your-ollama-host.example.com
+
+[observability]
+enabled = true
+
+# Routes configuration has been intentionally omitted from this file
+# to avoid exposing production domain and routing details when this
+# repository (including wrangler.toml) is served publicly (e.g. via
+# Cloudflare Pages with directory: .).
+#
+# Configure routes and zones for this worker via the Cloudflare
+# Dashboard instead of defining [[routes]] and zone_name here.
