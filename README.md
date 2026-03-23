@@ -1,5 +1,13 @@
 # blackroad-chat
 
+> BlackRoad AI Chat — Ollama-powered chat interface
+
+Part of the [BlackRoad OS](https://blackroad.io) ecosystem — [BlackRoad-OS-Inc](https://github.com/BlackRoad-OS-Inc)
+
+---
+
+# blackroad-chat
+
 BlackRoad AI Chat — Ollama-powered chat interface
 
 **BlackRoad-OS-Inc** — Corporate root — all IP and governance
